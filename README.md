@@ -14,7 +14,7 @@ nvenc compatible
 
 - Change `INSTALL` on line 7 to your ffmpeg executable (built with nvenc support). Default is /usr/bin/ffmpeg.
 
-- Change `FPS` on lin 9 to your desired recording framerate. Default is 60.
+- Change `FPS` on line 9 to your desired recording framerate. Default is 60.
 
 - Change `RESOLUTION` on line 11 to your resolution. (X11 resolution). Default is 1920x1080.
 
