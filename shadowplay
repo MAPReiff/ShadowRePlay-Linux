@@ -3,9 +3,11 @@
 set -eu
 
 # Resolution of your X session
-RESOLUTION="1920x1080"
+RESOLUTION="$(xdpyinfo | grep dimensions | awk '{print $2}')"
 
-# $(xdpyinfo | grep dimensions | awk '{print $2}')
+# If you want to use CPU-encoding
+# instead, set to true.
+SOFTWARE_ENCODE=false
 
 # Video Framerate
 FPS="60" 
@@ -14,7 +16,7 @@ FPS="60"
 # h264
 # hevc
 # h265
-ENCODER=h264
+ENCODER_STANDARD=h264
 
 # Size of replay buffer to save
 # Format is
@@ -38,69 +40,81 @@ elif lspci | grep VGA | grep Intel >/dev/null;then
     ENCODER_API=qsv
 fi
 
+ENCODER="$ENCODER_STANDARD"_"$ENCODER_API"
+
+if $SOFTWARE_ENCODE;then
+    ENCODER_API=
+    ENCODER=libx264
+fi
+
 BASEDIR=$(dirname "$0")
 
 DATE=$(date +%Y-%d-%m-%H:%M:%S)
-FILE="${VIDEO_FOLDER}/replay-${DATE}.mp4"
-
-nvidia_ffmpeg(){
-    ffmpeg \
-        -f pulse -i default \
-        -f x11grab \
-        -framerate ${FPS} \
-        -s ${RESOLUTION} \
-        -i "$DISPLAY" \
-        -c:v "$ENCODER"_"$ENCODER_API" \
-        -preset:v llhq \
-        -profile:v high \
-        -pix_fmt nv12 \
-        -b:v 15M \
-        -acodec aac \
-        -y \
-        /tmp/shadowplay.mp4
-    }
-
-amd_ffmpeg(){
-    ffmpeg \
-        -threads 0 \
-        -thread_queue_size 32768 \
-        -f x11grab \
-        -s ${RESOLUTION} \
-        -r ${FPS} \
-        -i "$DISPLAY" \
-        -f pulse -i default \
-        -ar 44100 \
-        -af "volume=50" \
-        -c:v "$ENCODER"_"$ENCODER_API" -vf format='nv12|vaapi,hwupload' -vaapi_device /dev/dri/renderD128 \
-        -y \
-        /tmp/shadowplay.mp4
-    }
-
-intel_ffmpeg(){
-    ffmpeg \
-        -threads 0 \
-        -thread_queue_size 32768 \
-        -f x11grab \
-        -s ${RESOLUTION} \
-        -r ${FPS} \
-        -i "$DISPLAY" \
-        -f pulse -ac 2 -i default \
-        -ar 44100 \
-        -af "volume=50" \
-        -c:v "$ENCODER"_"$ENCODER_API" \
-        -y \
-        /tmp/shadowplay.mp4
-}
-
-export ffmpeg_command
+FILE="$VIDEO_FOLDER"/replay-"$DATE".mp4
 
 case $ENCODER_API in
     "vaapi")
-        ffmpeg_command=amd_ffmpeg;;
+        ffmpeg_command(){
+            ffmpeg \
+                -threads 0 \
+                -thread_queue_size 32768 \
+                -f x11grab \
+                -s "$RESOLUTION" \
+                -r ${FPS} \
+                -i "$DISPLAY" \
+                -f pulse -i default \
+                -ar 44100 \
+                -c:v "$ENCODER" -vf format='nv12|vaapi,hwupload' -vaapi_device /dev/dri/renderD128 \
+                -y \
+                /tmp/shadowplay.mp4
+            };;
     "nvenc")    
-        ffmpeg_command=nvidia_ffmpeg;;
+        nvidia_ffmpeg(){
+            ffmpeg \
+                -f pulse -i default \
+                -f x11grab \
+                -framerate ${FPS} \
+                -s "$RESOLUTION" \
+                -i "$DISPLAY" \
+                -c:v "$ENCODER" \
+                -preset:v llhq \
+                -profile:v high \
+                -pix_fmt nv12 \
+                -b:v 15M \
+                -acodec aac \
+                -y \
+                /tmp/shadowplay.mp4
+            };;
     "qsv")      
-        ffmpeg_command=intel_ffmpeg;;
+        ffmpeg_command(){
+            ffmpeg \
+                -threads 0 \
+                -thread_queue_size 32768 \
+                -f x11grab \
+                -s "$RESOLUTION" \
+                -r ${FPS} \
+                -i "$DISPLAY" \
+                -f pulse -ac 2 -i default \
+                -ar 44100 \
+                -c:v "$ENCODER" \
+                -y \
+                /tmp/shadowplay.mp4
+            };;
+    *)
+        ffmpeg_command(){
+            ffmpeg \
+                -threads 0 \
+                -thread_queue_size 32768 \
+                -f x11grab \
+                -s "$RESOLUTION" \
+                -r ${FPS} \
+                -i "$DISPLAY" \
+                -f pulse -i default \
+                -ar 44100 \
+                -c:v "$ENCODER" -preset medium \
+                -y \
+                /tmp/shadowplay.mp4
+            };;
 esac
 
 ffmpeg_command ||
@@ -115,4 +129,4 @@ rm /tmp/shadowplay.mp4 &&
 
 cd "$BASEDIR" &&
     
-exec "./shadowplay.sh"
+./shadowplay
