@@ -20,7 +20,7 @@ nvenc compatible
 
 - Change `TIME` on line 13 to your desired save time. Default is 00:05:00 for 5min. 
 
-- Change `VIDEOFOLDER` on line 15 to the folder where you want replays saved. Default is ${HOME}/Videos (/home/YOUR_USER/Videos)
+- Change `VIDEOFOLDER` on line 15 to the folder where you want replays saved. Default is ${HOME}/Videos/ (/home/YOUR_USER/Videos/)
 
 
 ## Setup
