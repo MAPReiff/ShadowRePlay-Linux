@@ -1,27 +1,25 @@
 # Shadowplay On Linux
 
 Shadowplay's replay feature on Linux
-nvenc compatible
+
+- nvenc-compatible
 
 ## Prerequisites
 
 - Have FFMPEG installed
-	- `yay -S ffmpeg`
+	- `sudo pacman -S ffmpeg`
 - Have Xbindkeys installed
-	- `yay -S xbindkeys`
+	- `sudo pacman -S xbindkeys`
 
 ## Configuration
 
-- Change `INSTALL` on line 7 to your ffmpeg executable (built with nvenc support). Default is /usr/bin/ffmpeg.
+- Change `FPS` to your desired recording framerate. Default is 60.
 
-- Change `FPS` on lin 9 to your desired recording framerate. Default is 60.
+- Change `RESOLUTION` to your resolution. (X11 resolution). Default is 1920x1080.
 
-- Change `RESOLUTION` on line 11 to your resolution. (X11 resolution). Default is 1920x1080.
+- Change `REPLAY_BUFFER` to your desired save time. Default is 00:05:00 for 5min. 
 
-- Change `TIME` on line 13 to your desired save time. Default is 00:05:00 for 5min. 
-
-- Change `VIDEOFOLDER` on line 15 to the folder where you want replays saved. Default is ${HOME}/Videos/ (/home/YOUR_USER/Videos/)
-
+- Change `VIDEO_FOLDER` to the folder where you want replays saved. Default is ${HOME}/Videos/ (/home/YOUR_USER/Videos/)
 
 ## Setup
 
@@ -38,9 +36,12 @@ First, configure the key (or key combo) you want to use in order to save your re
 
 ### Script
 
-- Run the Shadowplay script with `./shadowplay.sh` in a terminal
+- Run the Shadowplay script with `./shadowplay` in a terminal
 - Press your configured hotkey to save the replay. 
 
+## TODO
+- Systemd service/timer integration
+- Automatic deletion of video recorded older than the replay buffer
 
 ## Notes
 When recording for long intervals, it may take some time to save your replays.

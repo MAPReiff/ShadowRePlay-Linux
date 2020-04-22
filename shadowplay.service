@@ -1,0 +1,6 @@
+[Unit]
+Description=Achieve ShadowPlay-like functionality on Linux
+
+[Service]
+ExecStart=/usr/local/bin/shadowplay
+invironment=DISPLAY=:0

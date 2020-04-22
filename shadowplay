@@ -1,0 +1,109 @@
+#!/bin/bash
+
+set -eu
+
+# Resolution of your X session
+RESOLUTION="1920x1080"
+
+# $(xdpyinfo | grep dimensions | awk '{print $2}')
+
+# Video Framerate
+FPS="60" 
+
+# Common encoders are:
+# h264
+# hevc
+# h265
+ENCODER=h264
+
+# Size of replay buffer to save
+# Format is
+#     hh:mm:ss
+REPLAY_BUFFER="00:05:00"
+
+# Location to save recordings
+VIDEO_FOLDER="$HOME/Videos/"
+
+if lspci | grep VGA | grep ATI >/dev/null;then
+    ENCODER_API=vaapi
+elif lspci | grep VGA | grep NVIDIA >/dev/null;then
+    ENCODER_API=nvenc
+elif lspci | grep VGA | grep Intel >/dev/null;then
+    ENCODER_API=qsv
+fi
+
+BASEDIR=$(dirname "$0")
+
+DATE=$(date +%Y-%d-%m-%H:%M:%S)
+FILE="${VIDEO_FOLDER}/replay-${DATE}.mp4"
+
+nvidia_ffmpeg(){
+    ffmpeg \
+        -f pulse -i 0 -f \
+        x11grab \
+        -framerate ${FPS} \
+        -s ${RESOLUTION} \
+        -i "$DISPLAY" \
+        -c:v "$ENCODER"_"$ENCODER_API" \
+        -preset:v llhq \
+        -profile:v high \
+        -pix_fmt nv12 \
+        -b:v 15M \
+        -acodec aac \
+        /tmp/shadowplay.mp4
+    }
+
+amd_ffmpeg(){
+    ffmpeg \
+        -threads 0 \
+        -thread_queue_size 32768 \
+        -f x11grab \
+        -s ${RESOLUTION} \
+        -r ${FPS} \
+        -i "$DISPLAY" \
+        -f pulse -ac 2 -i default \
+        -ar 44100 \
+        -af "volume=50" \
+        -c:v "$ENCODER"_"$ENCODER_API" -vf format='nv12|vaapi,hwupload' -vaapi_device /dev/dri/renderD128 \
+        /tmp/shadowplay.mp4
+    }
+
+intel_ffmpeg(){
+    ffmpeg \
+        -threads 0 \
+        -thread_queue_size 32768 \
+        -f x11grab \
+        -s ${RESOLUTION} \
+        -r ${FPS} \
+        -i "$DISPLAY" \
+        -f pulse -ac 2 -i default \
+        -ar 44100 \
+        -af "volume=50" \
+        -c:v "$ENCODER"_"$ENCODER_API"
+        /tmp/shadowplay.mp4
+}
+
+export ffmpeg_command
+
+case $ENCODER_API in
+    "vaapi")
+        ffmpeg_command=amd_ffmpeg;;
+    "nvenc")    
+        ffmpeg_command=nvidia_ffmpeg;;
+    "qsv")      
+        ffmpeg_command=intel_ffmpeg;;
+esac
+
+ffmpeg_command ||
+
+ffmpeg \
+    -sseof -$REPLAY_BUFFER \
+    -i /tmp/shadowplay.mp4 \
+    -vcodec copy -acodec copy \
+    "$FILE" -loglevel quiet &&
+
+rm /tmp/shadowplay.mp4 &&
+
+cd "$BASEDIR" &&
+    
+exec "./shadowplay.sh"
