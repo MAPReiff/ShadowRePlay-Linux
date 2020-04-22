@@ -24,6 +24,12 @@ REPLAY_BUFFER="00:05:00"
 # Location to save recordings
 VIDEO_FOLDER="$HOME/Videos/"
 
+if [ -e "$VIDEO_FOLDER" ]; then
+    echo "Video directory already exists."
+else
+    mkdir "$VIDEO_FOLDER"
+fi
+
 if lspci | grep VGA | grep ATI >/dev/null;then
     ENCODER_API=vaapi
 elif lspci | grep VGA | grep NVIDIA >/dev/null;then
@@ -39,8 +45,8 @@ FILE="${VIDEO_FOLDER}/replay-${DATE}.mp4"
 
 nvidia_ffmpeg(){
     ffmpeg \
-        -f pulse -i 0 -f \
-        x11grab \
+        -f pulse -i default \
+        -f x11grab \
         -framerate ${FPS} \
         -s ${RESOLUTION} \
         -i "$DISPLAY" \
@@ -50,6 +56,7 @@ nvidia_ffmpeg(){
         -pix_fmt nv12 \
         -b:v 15M \
         -acodec aac \
+        -y \
         /tmp/shadowplay.mp4
     }
 
@@ -61,10 +68,11 @@ amd_ffmpeg(){
         -s ${RESOLUTION} \
         -r ${FPS} \
         -i "$DISPLAY" \
-        -f pulse -ac 2 -i default \
+        -f pulse -i default \
         -ar 44100 \
         -af "volume=50" \
         -c:v "$ENCODER"_"$ENCODER_API" -vf format='nv12|vaapi,hwupload' -vaapi_device /dev/dri/renderD128 \
+        -y \
         /tmp/shadowplay.mp4
     }
 
@@ -79,7 +87,8 @@ intel_ffmpeg(){
         -f pulse -ac 2 -i default \
         -ar 44100 \
         -af "volume=50" \
-        -c:v "$ENCODER"_"$ENCODER_API"
+        -c:v "$ENCODER"_"$ENCODER_API" \
+        -y \
         /tmp/shadowplay.mp4
 }
 

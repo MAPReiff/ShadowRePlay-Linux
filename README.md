@@ -2,7 +2,7 @@
 
 Shadowplay's replay feature on Linux
 
-- nvenc-compatible
+- compatible with nvenc, vaapi, and qsv
 
 ## Prerequisites
 
@@ -26,11 +26,16 @@ Shadowplay's replay feature on Linux
 ### Keybind Setup
 First, configure the key (or key combo) you want to use in order to save your replays.
 - For instructions on how to bind keys, check [here](http://xahlee.info/linux/linux_xbindkeys_tutorial.html) 
+- Consider making another bind for killing ShadowPlay. (See below)
 - Bind a key to the command `killall --user $USER --ignore-case --signal SIGTERM  ffmpeg` so it looks something like this:
 ```
 # make F9 save Shadowplay replay
 "killall --user $USER --ignore-case --signal SIGTERM ffmpeg"
    F9
+
+# make F10 kill Shadowplay
+"killall -s1 ffmpeg"
+   F10
 ```
 - Start xbindkeys with `xbindkeys -f ~/.xbindkeysrc`, or reload it with `killall -s1 xbindkeys` if it's already running, for the new bind to take effect.
 
