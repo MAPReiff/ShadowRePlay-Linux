@@ -2,7 +2,7 @@
 
 Shadowplay's replay feature on Linux
 
-- compatible with nvenc, vaapi, and qsv
+- compatible with nvenc (Nvidia), vaapi (AMD), and qsv (Intel), as well as libx264
 
 ## Prerequisites
 
@@ -20,15 +20,7 @@ This will install the required dependencies on Arch and install the systemd user
 
 ## Configuration
 
-Edit the variables in the `shadowplay` file to configure.
-
-- Change `FPS` to your desired recording framerate. Default is 60.
-
-- Change `RESOLUTION` to your resolution. (X11 resolution). Default is your main monitor resolution.
-
-- Change `REPLAY_BUFFER` to your desired save time. Default is 00:05:00 for 5min. 
-
-- Change `VIDEO_FOLDER` to the folder where you want replays saved. Default is ${HOME}/Videos/ (/home/YOUR_USER/Videos/)
+Variables specific to your desired setup can be found in the example_config which is installed to `$HOME/.config/shadowplay`
 
 ## Setup
 
@@ -54,8 +46,10 @@ First, configure the key (or key combo) you want to use in order to save your re
 - Press your configured hotkey to save the replay. 
 
 ## TODO
-- Systemd service/timer integration
+- Systemd timer integration
 - Automatic deletion of video recorded older than the replay buffer
+- More flexible audio input support
+- Ability to downscale video output during recording
 
 ## Notes
 When recording for long intervals, it may take some time to save your replays.

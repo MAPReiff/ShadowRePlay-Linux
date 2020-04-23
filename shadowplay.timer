@@ -1,6 +1,0 @@
-[Timer]
-OnCalendar=*:0/2
-OnBootSec=1min
-
-[Install]
-WantedBy=timers.target

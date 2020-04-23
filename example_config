@@ -1,0 +1,32 @@
+#!/bin/sh
+
+# Resolution of your X session
+# which you wish to record
+#
+# Default is the first monitor's resolution
+export RESOLUTION="$(xdpyinfo | grep dimensions | awk 'NR==1{print $2}')"
+
+# If you want to use CPU-based encoding instead
+# of GPU-based encoding, set to true.
+#
+# Overrides ENCODER_STANDARD
+export SOFTWARE_ENCODE="false"
+
+# Video Framerate
+export FPS="60" 
+
+# Common encoders are:
+# h264
+# hevc
+# h265
+export ENCODER_STANDARD=h264
+
+# Size of replay buffer to save
+# Format is:
+#                     hh:mm:ss
+export REPLAY_BUFFER="00:05:00"
+
+# Location to save recordings
+#
+# By default, saves to the default VIDEOS directory
+export VIDEO_FOLDER="$(xdg-user-dir VIDEOS)"

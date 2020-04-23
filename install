@@ -1,5 +1,9 @@
 #!/bin/sh
 
+if ! ls "$HOME"/.config/shadowplay;then
+    cp example_config "$HOME"/.config/shadowplay
+fi
+
 DIR=$(dirname "$0")
 
 # Install dependencies on Arch
@@ -8,7 +12,7 @@ if [ -e "/etc/arch-release" ]; then
     sudo pacman --noconfirm -S xbindkeys ffmpeg libnotify
 fi
 
-# move shadowplay to /usr/bin
+# move shadowplay to /usr/local/bin
 sudo install "$DIR/shadowplay" /usr/local/bin 
 
 # Save the xbindkeys config
@@ -25,13 +29,11 @@ echo """
 # Install systemd user service
 mkdir -p "$HOME/.config/systemd/user/"
 cp "$DIR/shadowplay.service" "$HOME/.config/systemd/user/"
-cp "$DIR/shadowplay.timer" "$HOME/.config/systemd/user/"
 # Start shadowplay service
 systemctl --user enable --now shadowplay
 systemctl --user restart --now shadowplay
 
 echo """
-
 
 Installation is complete!
 Press F9 to save a replay"""
