@@ -24,7 +24,7 @@ ENCODER_STANDARD=h264
 REPLAY_BUFFER="00:05:00"
 
 # Location to save recordings
-VIDEO_FOLDER="$HOME/Videos/"
+VIDEO_FOLDER="$HOME/Videos"
 
 if [ -e "$VIDEO_FOLDER" ]; then
     echo "Video directory already exists."
@@ -50,7 +50,7 @@ fi
 BASEDIR=$(dirname "$0")
 
 DATE=$(date +%Y-%d-%m-%H:%M:%S)
-FILE="$VIDEO_FOLDER"/replay-"$DATE".mp4
+FILE="$VIDEO_FOLDER/replay-$DATE.mp4"
 
 case $ENCODER_API in
     "vaapi")
