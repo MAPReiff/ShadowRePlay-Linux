@@ -1,5 +1,5 @@
 #!/bin/sh
-sudo mv shadowplay.sh /usr/local/bin/
-mv shadowplay.service "$HOME"/config/systemd/user/
-mv shadowplay.timer "$HOME"/config/systemd/user/
-systemctl --user enable --now shadowplay
+sudo mv shadowplay /usr/local/bin/
+# mv shadowplay.service "$HOME"/config/systemd/user/
+# mv shadowplay.timer "$HOME"/config/systemd/user/
+# systemctl --user enable --now shadowplay
