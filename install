@@ -1,5 +1,10 @@
 #!/bin/sh
 sudo mv shadowplay /usr/local/bin/
+
+if ! ls "$HOME"/.config/shadowplay;then
+    cp example_config "$HOME"/.config/shadowplay
+fi
+
 # mv shadowplay.service "$HOME"/config/systemd/user/
 # mv shadowplay.timer "$HOME"/config/systemd/user/
 # systemctl --user enable --now shadowplay

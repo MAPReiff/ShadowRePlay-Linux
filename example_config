@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# Resolution of your X session
+# which you wish to record
+export RESOLUTION="1920x1080"
+
+# If you want to use CPU-encoding
+# instead, set to true.
+export SOFTWARE_ENCODE="false"
+
+# Video Framerate
+export FPS="60" 
+
+# Common encoders are:
+# h264
+# hevc
+# h265
+export ENCODER_STANDARD=h265
+
+# Size of replay buffer to save
+# Format is
+#     hh:mm:ss
+export REPLAY_BUFFER="00:05:00"
+
+# Location to save recordings
+export VIDEO_FOLDER="$HOME/Videos/"

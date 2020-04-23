@@ -2,29 +2,14 @@
 
 set -eu
 
-# Resolution of your X session
 RESOLUTION="$(xdpyinfo | grep dimensions | awk '{print $2}')"
-
-# If you want to use CPU-encoding
-# instead, set to true.
-SOFTWARE_ENCODE=true
-
-# Video Framerate
-FPS="60" 
-
-# Common encoders are:
-# h264
-# hevc
-# h265
+FPS="60"
 ENCODER_STANDARD=h264
-
-# Size of replay buffer to save
-# Format is
-#     hh:mm:ss
 REPLAY_BUFFER="00:05:00"
-
-# Location to save recordings
 VIDEO_FOLDER="$HOME/Videos/"
+PULSEAUDIO_SINK=2
+
+source"$HOME"/config/shadowplay
 
 if [ -e "$VIDEO_FOLDER" ]; then
     echo "Video directory already exists."
@@ -62,7 +47,7 @@ case $ENCODER_API in
                 -s "$RESOLUTION" \
                 -r ${FPS} \
                 -i "$DISPLAY" \
-                -f pulse -i default \
+                -f pulse -i default -ac $PULSEAUDIO_SINK \
                 -ar 44100 \
                 -c:v "$ENCODER" -vf format='nv12|vaapi,hwupload' -vaapi_device /dev/dri/renderD128 \
                 -y \
@@ -71,7 +56,7 @@ case $ENCODER_API in
     "nvenc")    
         ffmpeg_command(){
             ffmpeg \
-                -f pulse -i default \
+                -f pulse -i default -ac $PULSEAUDIO_SINK \
                 -f x11grab \
                 -framerate ${FPS} \
                 -s "$RESOLUTION" \
@@ -94,7 +79,7 @@ case $ENCODER_API in
                 -s "$RESOLUTION" \
                 -r ${FPS} \
                 -i "$DISPLAY" \
-                -f pulse -ac 2 -i default \
+                -f pulse -i default -ac $PULSEAUDIO_SINK \
                 -ar 44100 \
                 -c:v "$ENCODER" \
                 -y \
@@ -109,7 +94,7 @@ case $ENCODER_API in
                 -s "$RESOLUTION" \
                 -r ${FPS} \
                 -i "$DISPLAY" \
-                -f pulse -i default \
+                -f pulse -i default -ac $PULSEAUDIO_SINK \
                 -ar 44100 \
                 -c:v "$ENCODER" -preset medium \
                 -y \
