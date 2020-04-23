@@ -10,12 +10,21 @@ Shadowplay's replay feature on Linux
 	- `sudo pacman -S ffmpeg`
 - Have Xbindkeys installed
 	- `sudo pacman -S xbindkeys`
+- Have libnotify installed
+   - `sudo pacman -S libnotify`
+
+## Installation
+
+Download this repository and run the `install` file.
+This will install the required dependencies on Arch and install the systemd user service.
 
 ## Configuration
 
+Edit the variables in the `shadowplay` file to configure.
+
 - Change `FPS` to your desired recording framerate. Default is 60.
 
-- Change `RESOLUTION` to your resolution. (X11 resolution). Default is 1920x1080.
+- Change `RESOLUTION` to your resolution. (X11 resolution). Default is your main monitor resolution.
 
 - Change `REPLAY_BUFFER` to your desired save time. Default is 00:05:00 for 5min. 
 
