@@ -1,15 +1,16 @@
-#!/bin/bash
+#!/bin/sh
 
 set -eu
 
-RESOLUTION="$(xdpyinfo | grep dimensions | awk '{print $2}')"
-FPS="60"
+RESOLUTION="$(xdpyinfo | grep dimensions | awk 'NR==1{print $2}')"
+SOFTWARE_ENCODE=true
+FPS="60" 
 ENCODER_STANDARD=h264
 REPLAY_BUFFER="00:05:00"
 VIDEO_FOLDER="$HOME/Videos/"
-PULSEAUDIO_SINK=2
 
-source"$HOME"/config/shadowplay
+# Source user-specific config
+. $HOME/.config/shadowplay
 
 if [ -e "$VIDEO_FOLDER" ]; then
     echo "Video directory already exists."
@@ -17,11 +18,11 @@ else
     mkdir "$VIDEO_FOLDER"
 fi
 
-if lspci | grep VGA | grep ATI >/dev/null;then
+if lspci | awk '/VGA.*ATI/' >/dev/null;then
     ENCODER_API=vaapi
-elif lspci | grep VGA | grep NVIDIA >/dev/null;then
+elif lspci | awk '/VGA.*NVIDIA/' >/dev/null;then
     ENCODER_API=nvenc
-elif lspci | grep VGA | grep Intel >/dev/null;then
+elif lspci | awk '/VGA.*Intel/' >/dev/null;then
     ENCODER_API=qsv
 fi
 
@@ -35,7 +36,7 @@ fi
 BASEDIR=$(dirname "$0")
 
 DATE=$(date +%Y-%d-%m-%H:%M:%S)
-FILE="$VIDEO_FOLDER"/replay-"$DATE".mp4
+FILE="$VIDEO_FOLDER/replay-$DATE.mp4"
 
 case $ENCODER_API in
     "vaapi")
@@ -47,7 +48,7 @@ case $ENCODER_API in
                 -s "$RESOLUTION" \
                 -r ${FPS} \
                 -i "$DISPLAY" \
-                -f pulse -i default -ac $PULSEAUDIO_SINK \
+                -f pulse -i default \
                 -ar 44100 \
                 -c:v "$ENCODER" -vf format='nv12|vaapi,hwupload' -vaapi_device /dev/dri/renderD128 \
                 -y \
@@ -56,7 +57,7 @@ case $ENCODER_API in
     "nvenc")    
         ffmpeg_command(){
             ffmpeg \
-                -f pulse -i default -ac $PULSEAUDIO_SINK \
+                -f pulse -i default \
                 -f x11grab \
                 -framerate ${FPS} \
                 -s "$RESOLUTION" \
@@ -79,7 +80,7 @@ case $ENCODER_API in
                 -s "$RESOLUTION" \
                 -r ${FPS} \
                 -i "$DISPLAY" \
-                -f pulse -i default -ac $PULSEAUDIO_SINK \
+                -f pulse -i default \
                 -ar 44100 \
                 -c:v "$ENCODER" \
                 -y \
@@ -94,7 +95,7 @@ case $ENCODER_API in
                 -s "$RESOLUTION" \
                 -r ${FPS} \
                 -i "$DISPLAY" \
-                -f pulse -i default -ac $PULSEAUDIO_SINK \
+                -f pulse -i default \
                 -ar 44100 \
                 -c:v "$ENCODER" -preset medium \
                 -y \
@@ -111,6 +112,10 @@ ffmpeg \
     "$FILE" -loglevel quiet &&
 
 rm /tmp/shadowplay.mp4 &&
+
+notify-send -i video \
+	"Shadowplay" \
+	"Replay saved to $FILE"
 
 cd "$BASEDIR" &&
     

@@ -2,5 +2,9 @@
 Description=Achieve ShadowPlay-like functionality on Linux
 
 [Service]
+ExecStartPre=/usr/bin/xbindkeys -f "%h/.xbindkeysrc"
 ExecStart=/usr/local/bin/shadowplay
-invironment=DISPLAY=:0
+#Environment=DISPLAY=:0
+
+[Install]
+WantedBy=multi-user.target
