@@ -2,7 +2,9 @@
 
 # Resolution of your X session
 # which you wish to record
-export RESOLUTION="1920x1080"
+#
+# Default is the first monitor's resolution
+export RESOLUTION="$(xdpyinfo | grep dimensions | awk 'NR==1{print $2}')"
 
 # If you want to use CPU-based encoding instead
 # of GPU-based encoding, set to true.
@@ -25,4 +27,6 @@ export ENCODER_STANDARD=h264
 export REPLAY_BUFFER="00:05:00"
 
 # Location to save recordings
-export VIDEO_FOLDER="$HOME/Videos/"
+#
+# By default, saves to the default VIDEOS directory
+export VIDEO_FOLDER="$(xdg-user-dir VIDEOS)"
