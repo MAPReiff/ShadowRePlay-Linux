@@ -3,7 +3,7 @@
 set -eu
 
 RESOLUTION="$(xdpyinfo | grep dimensions | awk 'NR==1{print $2}')"
-SOFTWARE_ENCODE=true
+SOFTWARE_ENCODE=false
 FPS="60" 
 ENCODER_STANDARD=h264
 REPLAY_BUFFER="00:05:00"
