@@ -127,6 +127,10 @@ ffmpeg \
 
 rm /tmp/shadowplay.mp4 &&
 
+notify-send -i video \
+	"Shadowplay" \
+	"Replay saved to $FILE"
+
 cd "$BASEDIR" &&
     
 ./shadowplay
