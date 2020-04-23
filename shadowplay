@@ -3,7 +3,7 @@
 set -eu
 
 # Resolution of your X session
-RESOLUTION="$(xdpyinfo | grep dimensions | awk '{print $2}')"
+RESOLUTION="$(xdpyinfo | grep dimensions | awk 'NR==1{print $2}')"
 
 # If you want to use CPU-encoding
 # instead, set to true.
