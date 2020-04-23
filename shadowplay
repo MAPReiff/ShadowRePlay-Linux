@@ -7,22 +7,17 @@ SOFTWARE_ENCODE=false
 FPS="60" 
 ENCODER_STANDARD=h264
 REPLAY_BUFFER="00:05:00"
-VIDEO_FOLDER="$(xdg-user-dir VIDEOS)" || "$HOME/Videos/"
+VIDEO_FOLDER="$(xdg-user-dir VIDEOS)" || VIDEO_FOLDER="$HOME"/Videos
 
 # Source user-specific config
 . $HOME/.config/shadowplay
 
-if [ -e "$VIDEO_FOLDER" ]; then
-    echo "Video directory already exists."
-else
-    mkdir "$VIDEO_FOLDER"
-fi
 
-if lspci | awk '/VGA.*ATI/' >/dev/null;then
+if lspci | grep 'VGA.*ATI' >/dev/null;then
     ENCODER_API=vaapi
-elif lspci | awk '/VGA.*NVIDIA/' >/dev/null;then
+elif lspci | grep 'VGA.*NVIDIA' >/dev/null;then
     ENCODER_API=nvenc
-elif lspci | awk '/VGA.*Intel/' >/dev/null;then
+elif lspci | grep 'VGA.*Intel' >/dev/null;then
     ENCODER_API=qsv
 fi
 
