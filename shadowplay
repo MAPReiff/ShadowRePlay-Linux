@@ -7,7 +7,15 @@ SOFTWARE_ENCODE=false
 FPS="60" 
 ENCODER_STANDARD=h264
 REPLAY_BUFFER="00:05:00"
-VIDEO_FOLDER="$(xdg-user-dir VIDEOS)" || VIDEO_FOLDER="$HOME"/Videos
+
+if ls "$HOME"/Videos;then
+    VIDEO_FOLDER="$HOME"/Videos
+elif ls /usr/bin/xdg-user-dir;then
+    VIDEO_FOLDER="$(xdg-user-dir VIDEOS)" 
+else
+    mkdir "$HOME"/Videos
+    VIDEO_FOLDER="$HOME"/Videos
+fi
 
 # Source user-specific config
 . $HOME/.config/shadowplay
