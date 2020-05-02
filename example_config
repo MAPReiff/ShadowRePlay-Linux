@@ -3,7 +3,7 @@
 # Resolution of your X session
 # which you wish to record
 #
-# Default is the first monitor's resolution
+# Default is your first monitor's resolution
 export RESOLUTION="$(xdpyinfo | grep dimensions | awk 'NR==1{print $2}')"
 
 # If you want to use CPU-based encoding instead
@@ -11,6 +11,14 @@ export RESOLUTION="$(xdpyinfo | grep dimensions | awk 'NR==1{print $2}')"
 #
 # Overrides ENCODER_STANDARD
 export SOFTWARE_ENCODE="false"
+
+# If you have an AMD GPU and desire
+# to use AMF/VCE instead of VAAPI,
+# then set this to true.
+#
+# XXX: Requires AMF to be set up:
+# More details at: https://github.com/durcor/amdgpu-pro-amf-only
+export NONFREE_AMD_ENCODER="false"
 
 # Video Framerate
 export FPS="60" 

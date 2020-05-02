@@ -2,7 +2,7 @@
 
 Shadowplay's replay feature on Linux
 
-- compatible with nvenc (Nvidia), vaapi (AMD), and qsv (Intel), as well as libx264
+- compatible with Nvidia (nvenc), AMD (vaapi,amf/vce), Intel (quicksync) GPUs, as well as libx264.
 
 ## Prerequisites
 
@@ -29,13 +29,13 @@ First, configure the key (or key combo) you want to use in order to save your re
 - For instructions on how to bind keys, check [here](http://xahlee.info/linux/linux_xbindkeys_tutorial.html) 
 - Consider making another bind for killing ShadowPlay. (See below)
 - Bind a key to the command `killall --user $USER --ignore-case --signal SIGTERM  ffmpeg` so it looks something like this:
-```
+```sh
 # make F9 save Shadowplay replay
-"killall --user $USER --ignore-case --signal SIGTERM ffmpeg"
+killall --user $USER --ignore-case --signal SIGTERM ffmpeg
    F9
 
 # make F10 kill Shadowplay
-"killall -s1 ffmpeg"
+killall -s1 ffmpeg
    F10
 ```
 - Start xbindkeys with `xbindkeys -f ~/.xbindkeysrc`, or reload it with `killall -s1 xbindkeys` if it's already running, for the new bind to take effect.
@@ -50,6 +50,7 @@ First, configure the key (or key combo) you want to use in order to save your re
 - Automatic deletion of video recorded older than the replay buffer
 - More flexible audio input support
 - Ability to downscale video output during recording
+- Dynamic video buffer size allocation based on resolution and FPS
 
 ## Notes
 When recording for long intervals, it may take some time to save your replays.

@@ -20,8 +20,9 @@ fi
 # Source user-specific config
 . $HOME/.config/shadowplay
 
-
-if lspci | grep 'VGA.*ATI' >/dev/null;then
+if $NONFREE_AMD_ENCODER;then
+    ENCODER_API=amf
+elif lspci | grep 'VGA.*ATI' >/dev/null;then
     ENCODER_API=vaapi
 elif lspci | grep 'VGA.*NVIDIA' >/dev/null;then
     ENCODER_API=nvenc
@@ -54,6 +55,21 @@ case $ENCODER_API in
                 -f pulse -i default \
                 -ar 44100 \
                 -c:v "$ENCODER" -vf format='nv12|vaapi,hwupload' -vaapi_device /dev/dri/renderD128 \
+                -y \
+                /tmp/shadowplay.mp4
+            };;
+    "amf")
+        ffmpeg_command(){
+            ffmpeg \
+                -threads 0 \
+                -thread_queue_size 32768 \
+                -f x11grab \
+                -s "$RESOLUTION" \
+                -r ${FPS} \
+                -i "$DISPLAY" \
+                -f pulse -i default \
+                -ar 44100 \
+                -c:v "$ENCODER" \
                 -y \
                 /tmp/shadowplay.mp4
             };;
