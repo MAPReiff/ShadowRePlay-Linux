@@ -1,6 +1,6 @@
-# Shadowplay On Linux
+# ShadowRePlay
 
-Shadowplay's replay feature on Linux
+Recreates Shadowplay's replay feature on Linux
 
 - compatible with Nvidia (nvenc), AMD (vaapi,amf/vce), Intel (quicksync) GPUs, as well as libx264.
 
@@ -20,21 +20,21 @@ This will install the required dependencies on Arch and install the systemd user
 
 ## Configuration
 
-Variables specific to your desired setup can be found in the example_config which is installed to `$HOME/.config/shadowplay`
+Variables specific to your desired setup can be found in the example_config which is installed to `$HOME/.config/shadowreplay`
 
 ## Setup
 
 ### Keybind Setup
 First, configure the key (or key combo) you want to use in order to save your replays.
 - For instructions on how to bind keys, check [here](http://xahlee.info/linux/linux_xbindkeys_tutorial.html) 
-- Consider making another bind for killing ShadowPlay. (See below)
+- Consider making another bind for killing ShadowRePlay. (See below)
 - Bind a key to the command `killall --user $USER --ignore-case --signal SIGTERM  ffmpeg` so it looks something like this:
 ```sh
-# make F9 save Shadowplay replay
+# make F9 save ShadowRePlay replay
 killall --user $USER --ignore-case --signal SIGTERM ffmpeg
    F9
 
-# make F10 kill Shadowplay
+# make F10 kill ShadowRePlay
 killall -s1 ffmpeg
    F10
 ```
@@ -42,7 +42,7 @@ killall -s1 ffmpeg
 
 ### Script
 
-- Run the Shadowplay script with `./shadowplay` in a terminal
+- Run the Shadowprelay script with `./shadowreplay` in a terminal
 - Press your configured hotkey to save the replay. 
 
 ## TODO

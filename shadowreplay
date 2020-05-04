@@ -18,7 +18,7 @@ else
 fi
 
 # Source user-specific config
-. $HOME/.config/shadowplay
+. $HOME/.config/shadowreplay
 
 if $NONFREE_AMD_ENCODER;then
     ENCODER_API=amf
@@ -56,7 +56,7 @@ case $ENCODER_API in
                 -ar 44100 \
                 -c:v "$ENCODER" -vf format='nv12|vaapi,hwupload' -vaapi_device /dev/dri/renderD128 \
                 -y \
-                /tmp/shadowplay.mp4
+                /tmp/shadowreplay.mp4
             };;
     "amf")
         ffmpeg_command(){
@@ -71,7 +71,7 @@ case $ENCODER_API in
                 -ar 44100 \
                 -c:v "$ENCODER" \
                 -y \
-                /tmp/shadowplay.mp4
+                /tmp/shadowreplay.mp4
             };;
     "nvenc")    
         ffmpeg_command(){
@@ -88,7 +88,7 @@ case $ENCODER_API in
                 -b:v 15M \
                 -acodec aac \
                 -y \
-                /tmp/shadowplay.mp4
+                /tmp/shadowreplay.mp4
             };;
     "qsv")      
         ffmpeg_command(){
@@ -103,7 +103,7 @@ case $ENCODER_API in
                 -ar 44100 \
                 -c:v "$ENCODER" \
                 -y \
-                /tmp/shadowplay.mp4
+                /tmp/shadowreplay.mp4
             };;
     *)
         ffmpeg_command(){
@@ -118,7 +118,7 @@ case $ENCODER_API in
                 -ar 44100 \
                 -c:v "$ENCODER" -preset medium \
                 -y \
-                /tmp/shadowplay.mp4
+                /tmp/shadowreplay.mp4
             };;
 esac
 
@@ -126,16 +126,16 @@ ffmpeg_command ||
 
 ffmpeg \
     -sseof -$REPLAY_BUFFER \
-    -i /tmp/shadowplay.mp4 \
+    -i /tmp/shadowreplay.mp4 \
     -vcodec copy -acodec copy \
     "$FILE" -loglevel quiet &&
 
-rm /tmp/shadowplay.mp4 &&
+rm /tmp/shadowreplay.mp4 &&
 
 notify-send -i video \
-	"Shadowplay" \
+	"ShadowRePlay" \
 	"Replay saved to $FILE"
 
 cd "$BASEDIR" &&
     
-./shadowplay
+./shadowreplay
