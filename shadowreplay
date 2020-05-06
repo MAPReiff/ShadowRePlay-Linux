@@ -67,8 +67,6 @@ esac
 
 ffmpeg_command(){
     ffmpeg \
-        -threads 0 \
-        -thread_queue_size 32768 \
         -f x11grab \
         -s "$RESOLUTION" \
         -r ${FPS} \
