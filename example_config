@@ -30,9 +30,9 @@ export FPS="60"
 export ENCODER_STANDARD=h264
 
 # Size of replay buffer to save
-# Format is:
-#                     hh:mm:ss
-export REPLAY_BUFFER="00:05:00"
+# Is in minutes
+# Can be numbers such as 10 (10 minutes) or 2.5 (2 minutes and 30 seconds) 
+export REPLAY_BUFFER="5"
 
 # Location to save recordings
 #
