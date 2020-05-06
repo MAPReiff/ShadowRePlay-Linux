@@ -16,15 +16,18 @@ fi
 sudo install "$DIR/shadowreplay" /usr/local/bin 
 
 # Save the xbindkeys config
-echo """
-# make F9 save ShadowRePlay replay
-"killall --user "$USER" --ignore-case --signal SIGTERM ffmpeg"
-   F9
-
-# make F10 kill ShadowRePlay
-"killall -s1 ffmpeg"
-   F10
-""" >> "$HOME/.xbindkeysrc"
+# if xbindkeys is installed
+if ls /bin/xbindkeys;then
+    echo """
+    # make F9 save ShadowRePlay replay
+    "killall --user "$USER" --ignore-case --signal SIGTERM ffmpeg"
+       F9
+    
+    # make F10 kill ShadowRePlay
+    "killall -s1 ffmpeg"
+       F10
+    """ >> "$HOME/.xbindkeysrc"
+fi
 
 # Install systemd user service
 mkdir -p "$HOME/.config/systemd/user/"

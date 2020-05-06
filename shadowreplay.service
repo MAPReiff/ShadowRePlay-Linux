@@ -1,5 +1,6 @@
 [Unit]
 Description=Achieve ShadowPlay-like functionality on Linux
+After=graphical.target
 
 [Service]
 ExecStartPre=/usr/bin/xbindkeys -f "%h/.xbindkeysrc"
