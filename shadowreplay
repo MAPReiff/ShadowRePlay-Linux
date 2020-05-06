@@ -17,9 +17,11 @@ else
     VIDEO_FOLDER="$HOME"/Videos
 fi
 
-BUFFER_SEC=$((REPLAY_BUFFER * 60))
+
+BUFFER_SEC="$(expr $REPLAY_BUFFER \* 60)"
 BUFFER_SEGMENT_LENGTH="30"
-BUFFER_SEGMENTS=$((BUFFER_SEC / BUFFER_SEGMENT_LENGTH))
+BUFFER_SEGMENTS="$(expr $BUFFER_SEC \/ $BUFFER_SEGMENT_LENGTH)"
+
 
 # Source user-specific config
 . $HOME/.config/shadowreplay
@@ -47,30 +49,99 @@ DATE=$(date +%Y-%d-%m-%H:%M:%S)
 FILE="$VIDEO_FOLDER/replay-$DATE.mp4"
 
 case $ENCODER_API in
-    "vaapi") ENCODER_OPTS="-c:v $ENCODER -vf format='nv12|vaapi,hwupload' -vaapi_device /dev/dri/renderD128";;
-    "amf") ENCODER_OPTS="-c:v $ENCODER";;
-    "nvenc") ENCODER_OPTS="-c:v $ENCODER -preset:v llhq -profile:v high -pix_fmt nv12 -b:v 15M -acodec aac";;
-    "qsv") ENCODER_OPTS="-c:v $ENCODER";;
-    *) ENCODER_OPTS="-c:v $ENCODER -preset medium";;
+    "vaapi")
+        ffmpeg_command(){
+            ffmpeg \
+                -threads 0 \
+                -thread_queue_size 32768 \
+                -f x11grab \
+                -s "$RESOLUTION" \
+                -r ${FPS} \
+                -i "$DISPLAY" \
+                -f pulse -i default \
+                -ar 44100 \
+                -c:v "$ENCODER" -vf format='nv12|vaapi,hwupload' -vaapi_device /dev/dri/renderD128 \
+                -f segment \
+                -segment_time 30 \
+                -segment_wrap "$BUFFER_SEGMENTS" \
+                -segment_list /tmp/ShadowRePlay.m3u8 \
+                -segment_list_size 6 /tmp/ShadowRePlaySeg%d.ts
+            };;
+    "amf")
+        ffmpeg_command(){
+            ffmpeg \
+                -threads 0 \
+                -thread_queue_size 32768 \
+                -f x11grab \
+                -s "$RESOLUTION" \
+                -r ${FPS} \
+                -i "$DISPLAY" \
+                -f pulse -i default \
+                -ar 44100 \
+                -c:v "$ENCODER" \
+                -f segment \
+                -segment_time 30 \
+                -segment_wrap "$BUFFER_SEGMENTS" \
+                -segment_list /tmp/ShadowRePlay.m3u8 \
+                -segment_list_size 6 /tmp/ShadowRePlaySeg%d.ts
+            };;
+    "nvenc")    
+        ffmpeg_command(){
+            ffmpeg \
+                -f pulse -i default \
+                -f x11grab \
+                -framerate ${FPS} \
+                -s "$RESOLUTION" \
+                -i "$DISPLAY" \
+                -c:v "$ENCODER" \
+                -preset:v llhq \
+                -profile:v high \
+                -pix_fmt nv12 \
+                -b:v 15M \
+                -acodec aac \
+                -f segment \
+                -segment_time 30 \
+                -segment_wrap "$BUFFER_SEGMENTS" \
+                -segment_list /tmp/ShadowRePlay.m3u8 \
+                -segment_list_size 6 /tmp/ShadowRePlaySeg%d.ts
+            };;
+    "qsv")      
+        ffmpeg_command(){
+            ffmpeg \
+                -threads 0 \
+                -thread_queue_size 32768 \
+                -f x11grab \
+                -s "$RESOLUTION" \
+                -r ${FPS} \
+                -i "$DISPLAY" \
+                -f pulse -i default \
+                -ar 44100 \
+                -c:v "$ENCODER" \
+                -f segment \
+                -segment_time 30 \
+                -segment_wrap "$BUFFER_SEGMENTS" \
+                -segment_list /tmp/ShadowRePlay.m3u8 \
+                -segment_list_size 6 /tmp/ShadowRePlaySeg%d.ts
+            };;
+    *)
+        ffmpeg_command(){
+            ffmpeg \
+                -threads 0 \
+                -thread_queue_size 32768 \
+                -f x11grab \
+                -s "$RESOLUTION" \
+                -r ${FPS} \
+                -i "$DISPLAY" \
+                -f pulse -i default \
+                -ar 44100 \
+                -c:v "$ENCODER" -preset medium \
+                -f segment \
+                -segment_time 30 \
+                -segment_wrap "$BUFFER_SEGMENTS" \
+                -segment_list /tmp/ShadowRePlay.m3u8 \
+                -segment_list_size 6 /tmp/ShadowRePlaySeg%d.ts
+            };;
 esac
-
-ffmpeg_command(){
-    ffmpeg \
-        -threads 0 \
-        -thread_queue_size 32768 \
-        -f x11grab \
-        -s "$RESOLUTION" \
-        -r ${FPS} \
-        -i "$DISPLAY" \
-        -f pulse -i default \
-        -ar 44100 \
-        "$ENCODER_OPTS" \
-        -f segment \
-        -segment_time 30 \
-        -segment_wrap "$BUFFER_SEGMENTS" \
-        -segment_list /tmp/ShadowRePlay.m3u8 \
-        -segment_list_size 6 /tmp/ShadowRePlaySeg%d.ts
-    }
 
 ffmpeg_command ||
 
