@@ -9,7 +9,7 @@ DIR=$(dirname "$0")
 # Install dependencies on Arch
 if [ -e "/etc/arch-release" ]; then
     echo "Installing dependencies"
-    sudo pacman --noconfirm -S xbindkeys ffmpeg libnotify
+    sudo pacman --noconfirm -S ffmpeg libnotify
 fi
 
 # move shadowreplay to /usr/local/bin
@@ -18,7 +18,7 @@ sudo install "$DIR/shadowreplay" /usr/local/bin
 # Save the xbindkeys config
 echo """
 # make F9 save ShadowRePlay replay
-"killall --user $USER --ignore-case --signal SIGTERM ffmpeg"
+"killall --user "$USER" --ignore-case --signal SIGTERM ffmpeg"
    F9
 
 # make F10 kill ShadowRePlay
