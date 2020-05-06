@@ -47,11 +47,22 @@ DATE=$(date +%Y-%d-%m-%H:%M:%S)
 FILE="$VIDEO_FOLDER/replay-$DATE.mp4"
 
 case $ENCODER_API in
-    "vaapi") ENCODER_OPTS="-c:v $ENCODER -vf format='nv12|vaapi,hwupload' -vaapi_device /dev/dri/renderD128";;
-    "amf") ENCODER_OPTS="-c:v $ENCODER";;
-    "nvenc") ENCODER_OPTS="-c:v $ENCODER -preset:v llhq -profile:v high -pix_fmt nv12 -b:v 15M -acodec aac";;
-    "qsv") ENCODER_OPTS="-c:v $ENCODER";;
-    *) ENCODER_OPTS="-c:v $ENCODER -preset medium";;
+    "vaapi") 
+        ENCODER_OPTS="-c:v $ENCODER -vf format='nv12|vaapi,hwupload' -vaapi_device /dev/dri/renderD128"
+        ;;
+    "amf") 
+        VK_ICD_FILENAMES=/opt/amdgpu-pro/etc/vulkan/icd.d/amd_icd64.json:/opt/amdgpu-pro/etc/vulkan/icd.d/amd_icd32.json 
+        ENCODER_OPTS="-c:v $ENCODER"
+        ;;
+    "nvenc") 
+        ENCODER_OPTS="-c:v $ENCODER -preset:v llhq -profile:v high -pix_fmt nv12 -b:v 15M -acodec aac"
+        ;;
+    "qsv") 
+        ENCODER_OPTS="-c:v $ENCODER"
+        ;;
+    *) 
+        ENCODER_OPTS="-c:v $ENCODER -preset medium"
+        ;;
 esac
 
 ffmpeg_command(){
@@ -64,7 +75,7 @@ ffmpeg_command(){
         -i "$DISPLAY" \
         -f pulse -i default \
         -ar 44100 \
-        "$ENCODER_OPTS" \
+        $ENCODER_OPTS \
         -f segment \
         -segment_time 30 \
         -segment_wrap "$BUFFER_SEGMENTS" \
