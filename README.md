@@ -34,7 +34,7 @@ If you are using an Arch-based Linux distribution, shadowreplay is in the AUR, s
 
 Its package name is `shadowreplay-git`.
 
-If you are on a Debian-based distro like Ubuntu or anything else, shadowreplay can be installed by running the `instal` file after cloning this repo.
+If you are on a Debian-based distro like Ubuntu or anything else, shadowreplay can be installed by running the `install` file after cloning this repo.
 
 This will install the required dependencies on Arch and install the systemd user service.
 
