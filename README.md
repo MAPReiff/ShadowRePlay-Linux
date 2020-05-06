@@ -95,10 +95,6 @@ F10
 
 ## TODO
 
-- Systemd timer integration
-
-- ~~Automatic deletion of video recorded older than the replay buffer~~
-
 - More flexible audio input support
 
 - Ability to downscale video output during recording
@@ -108,10 +104,6 @@ F10
   
 
 ## Notes
-
-When recording for long intervals, it may take some time to save your replays.
-
-  
 
 Heavily inspired by [Toqozz's script](https://github.com/Toqozz/shadowplay-linux).
 
