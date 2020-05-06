@@ -51,7 +51,7 @@ case $ENCODER_API in
         ENCODER_OPTS="-c:v $ENCODER -vf format='nv12|vaapi,hwupload' -vaapi_device /dev/dri/renderD128"
         ;;
     "amf") 
-        VK_ICD_FILENAMES=/opt/amdgpu-pro/etc/vulkan/icd.d/amd_icd64.json:/opt/amdgpu-pro/etc/vulkan/icd.d/amd_icd32.json 
+        export VK_ICD_FILENAMES=/opt/amdgpu-pro/etc/vulkan/icd.d/amd_icd64.json:/opt/amdgpu-pro/etc/vulkan/icd.d/amd_icd32.json 
         ENCODER_OPTS="-c:v $ENCODER"
         ;;
     "nvenc") 
