@@ -1,4 +1,3 @@
-
 # ShadowRePlay
 
   
@@ -31,9 +30,11 @@ Recreates Shadowplay's replay feature on Linux
 
 ## Installation
 
-  
+If you are using an Arch-based Linux distribution, shadowreplay is in the AUR, so you can install it using your preferred AUR helper. 
 
-Download this repository and run the `install` file.
+Its package name is `shadowreplay-git`.
+
+If you are on a Debian-based distro like Ubuntu or anything else, shadowreplay can be installed by running the `instal` file after cloning this repo.
 
 This will install the required dependencies on Arch and install the systemd user service.
 
@@ -83,11 +84,11 @@ F10
 
   
 
-### Script
+### Usage
 
   
 
-- Run the Shadowprelay script with `./shadowreplay` in a terminal
+- Run `shadowreplay` in a terminal
 
 - Press your configured hotkey to save the replay.
 
