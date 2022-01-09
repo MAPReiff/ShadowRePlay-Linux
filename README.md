@@ -66,16 +66,14 @@ First, configure the key (or key combo) you want to use in order to save your re
 
 # make F9 save ShadowRePlay replay
 
-killall --user $USER --ignore-case --signal SIGTERM ffmpeg
-
+"killall --user $USER --ignore-case --signal SIGTERM ffmpeg"
 F9
 
   
 
 # make F10 kill ShadowRePlay
 
-killall -s1 ffmpeg
-
+"killall -s1 ffmpeg"
 F10
 
 ```
