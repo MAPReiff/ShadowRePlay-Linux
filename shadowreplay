@@ -65,10 +65,6 @@ case $ENCODER_API in
         ;;
 esac
 
-ffmpeg_command(){
-    # This is now controlled by the config file for greater accessability to user without having to edit the bin.
-    $FFMPEG_COMMAND_VAR
-    }
 
 ffmpeg_command ||
 
