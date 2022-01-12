@@ -79,7 +79,7 @@ F10
 ```
 
 - Start xbindkeys with `xbindkeys -f ~/.xbindkeysrc`, or reload it with `killall -s1 xbindkeys` if it's already running, for the new bind to take effect.
-
+- If you would like to enable xbindkeys every time you login, simple add this to your .bash_profile with `echo 'xbindkeys -f $HOME/.xbindkeysrc' >> $HOME/.bash_profile`
   
 
 ### Usage
