@@ -66,19 +66,8 @@ case $ENCODER_API in
 esac
 
 ffmpeg_command(){
-    ffmpeg \
-        -f x11grab \
-        -s "$RESOLUTION" \
-        -r ${FPS} \
-        -i "$DISPLAY" \
-        -f pulse -i default \
-        -ar 44100 \
-        $ENCODER_OPTS \
-        -f segment \
-        -segment_time 30 \
-        -segment_wrap "$BUFFER_SEGMENTS" \
-        -segment_list /tmp/ShadowRePlay.m3u8 \
-        -segment_list_size 6 /tmp/ShadowRePlaySeg%d.ts
+    # This is now controlled by the config file for greater accessability to user without having to edit the bin.
+    $FFMPEG_COMMAND_VAR
     }
 
 ffmpeg_command ||
