@@ -40,9 +40,9 @@ export REPLAY_BUFFER="5"
 export VIDEO_FOLDER="$(xdg-user-dir VIDEOS)"
 
 # FFMPEG Command Options
-#
+# Change these to change how shadowreplay works with ffmpeg
 # Don't mess with these unless you know what you're doing!
-export FFMPEG_COMMAND_VAR='
+ffmpeg_command(){  # Create the function
     ffmpeg \
         -f x11grab \
         -s "$RESOLUTION" \
@@ -56,4 +56,7 @@ export FFMPEG_COMMAND_VAR='
         -segment_wrap "$BUFFER_SEGMENTS" \
         -segment_list /tmp/ShadowRePlay.m3u8 \
         -segment_list_size 6 /tmp/ShadowRePlaySeg%d.ts
-'
+}
+
+
+export -f ffmpeg_command  # Export the function 
