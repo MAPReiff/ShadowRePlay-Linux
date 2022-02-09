@@ -80,7 +80,6 @@ F10
 
 - Start xbindkeys with `xbindkeys -f ~/.xbindkeysrc`, or reload it with `killall -s1 xbindkeys` if it's already running, for the new bind to take effect.
 
-  
 
 ### Usage
 
